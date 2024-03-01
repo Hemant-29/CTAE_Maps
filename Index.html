@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <style>
+    /*.container{*/
+    /*    position: relative;*/
+    /*    width: 100%;*/
+    /*    height: 100%;*/
+    /*}*/
+    #map {
+      position: fixed;
+      top: 65px;
+      bottom: 0;
+      right: 0;
+      left: 350px;
+      z-index: 1;
+    }
+
+
+
+    .nav-bar {
+      background-color: rgb(121, 152, 152);
+      height: 60px;
+      color: black;
+      border: 2px solid transparent;
+      display: flex;
+      /* Use flex for horizontal alignment */
+      align-items: center;
+      font-family: Arial, Helvetica, sans-serif;
+      justify-content: space-evenly;
+      position: fixed;
+      /* Make the navbar fixed */
+      top: 0;
+      /* Position it at the top of the viewport */
+      left: 0;
+      /* Position it at the left edge of the viewport */
+      width: 100%;
+      /* Make it span the full width of the viewport */
+      z-index: 2;
+      /* Maintain stacking order above other elements */
+      transition: all 0.3s ease-in-out;
+      /* Add smooth transition effect */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 2);
+      /* Optional: Add subtle shadow */
+      /* Optional: Add subtle shadow */
+    }
+
+    .navbar-logo {
+      height: 50px;
+      width: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logo {
+      background-image: url(ctaelogo.png);
+      background-size: cover;
+      height: 60px;
+      width: 60px;
+    }
+
+    .border {
+      border: 2px solid transparent;
+    }
+
+    .border:hover {
+      border: 2px solid black;
+
+    }
+
+    .web-name {
+      font-size: 2em;
+      /* font-style: oblique; */
+      /* font-family: 'Courier New', Courier, monospace; */
+      font-family: serif;
+      font-weight: 700;
+    }
+
+
+    .nav-search {
+      display: flex;
+      justify-content: space-evenly;
+      /* background-color: pink; */
+      width: 620px;
+      height: 40px;
+      border-radius: 30px;
+      border: 2px solid #a6b181;
+    }
+
+    .search-input {
+      width: 100%;
+      border: none;
+      font-size: 1.1rem;
+      border-top-left-radius: 30px;
+      border-bottom-left-radius: 30px;
+    }
+
+    .search-icon {
+      width: 45px;
+      display: flex;
+      font-size: 1.2rem;
+      justify-content: center;
+      align-items: center;
+      /* background-color: #febd68; */
+      border-top-right-radius: 30px;
+      border-bottom-right-radius: 30px;
+      color: #0f1111;
+      border: none;
+    }
+
+    /*.direc-icon{*/
+    /*    width: 45px;*/
+    /*    display: flex;*/
+    /*    font-size: 1.2rem;*/
+    /*    justify-content: center;*/
+    /*    align-items: center;*/
+    /*    background-color: #dcd8d8;*/
+    /*    border-top-right-radius: 30px;*/
+    /*    border-bottom-right-radius: 30px;*/
+    /*    color: #0f1111;*/
+    /*    border: none;*/
+    /*}*/
+
+    .nav-search:hover {
+      border: 3px solid black;
+    }
+
+    .boxx {
+
+      height: 50px;
+      width: 200px;
+      /* background-color:red; */
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      font-size: 1.5rem;
+    }
+
+    .button-icon {
+      height: 40px;
+      width: 40px;
+      font-size: 1.2rem;
+      border: none;
+      /*background-attachment: 0;*/
+
+      background-color: transparent;
+
+    }
+
+    .icon-font {
+      font-size: 0.7rem;
+    }
+
+
+
+
+
+    * {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      /*border: border-box;*/
+      font-size: 1rem;
+    }
+
+    .box {
+
+      /* align-items:flex-start; */
+      background-color: rgb(178, 197, 197);
+      height: 700px;
+      width: 350px;
+      z-index: 3;
+    }
+
+    #image {
+      background-color: azure;
+      width: 350px;
+      height: 200px;
+      /* background: url(ramona.jpg); */
+      background-size: cover;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 2);
+      /* Optional: Add subtle shadow */
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: space-evenly;
+    }
+
+
+
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      /* Set a clean, readable font */
+      margin: 0;
+      /* Remove default margin from body */
+    }
+
+    #Overview {
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      width: 85px;
+      height: 27px;
+      border: 1px solid transparent;
+      border-radius: 1rem;
+
+    }
+
+    #Overview:hover {
+      background-color: #e6d1f5;
+      color: rgb(44, 37, 37);
+    }
+
+    #Floor-plan:hover {
+      background-color: #e6d1f5;
+      color: rgb(44, 37, 37);
+    }
+
+    #Contact:hover {
+      background-color: #e6d1f5;
+      color: rgb(44, 37, 37);
+    }
+
+
+    #Floor-plan {
+      margin-top: 1rem;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      width: 85px;
+      height: 27px;
+      border: 1px solid transparent;
+      border-radius: 1rem;
+    }
+
+    #Contact {
+      margin-top: 1rem;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      width: 85px;
+      height: 27px;
+      border: 1px solid transparent;
+      border-radius: 1rem;
+    }
+
+    /* Overview Content */
+    #buiding-name {
+      border-top: 0.5px solid white;
+      border-bottom: 0.5px solid white;
+
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 25px;
+      font-weight: bolder;
+    }
+
+    #floors-font {
+      border-top: 0.5px solid white;
+      border-bottom: 0.5px solid white;
+      font-size: 20px;
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: bolder;
+    }
+
+
+    #overview-content {
+      padding: 20px;
+      /* Add some padding inside the content area */
+      background-color: #b2c5c5;
+      border: 1px solid #ddd;
+      /* Add a light border */
+      border-radius: 5px;
+      /* Add some rounded corners for a softer look */
+      display: flex;
+      /* Allow elements inside to align horizontally */
+      align-items: center;
+      /* Vertically center content within the overview area */
+    }
+
+    #icon {
+      font-size: 100px;
+    }
+
+    /* Building Icon */
+    #building {
+      margin-right: 20px;
+      /* Add some space between the icon and text content */
+    }
+
+    /* Overview Content Text */
+    #oc {
+      flex: 1;
+      /* Expand to fill available space within the overview content */
+    }
+
+    #oc h1,
+    #oc p {
+      margin: 5px 0;
+      /* Add some spacing between headings and paragraphs */
+    }
+
+    #oc h1 {
+      font-size: 18px;
+      /* Increase heading font size slightly */
+    }
+
+    #oc p {
+      color: #666;
+      /* Use a slightly lighter color for paragraphs */
+    }
+
+
+    #overview-content #building p {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      /* Add spacing between paragraphs */
+    }
+
+    #overview-content #building i {
+      margin-right: 10px;
+      /* Adjust spacing between icon and text */
+      font-size: 18px;
+      /* Adjust icon size if needed */
+    }
+
+    #overview-content #building p:first-child {
+      /* Style the first paragraph (building name) */
+      font-weight: bold;
+      font-size: 16px;
+      /* Adjust font size if needed */
+    }
+
+    #Overview:hover {
+      cursor: pointer;
+    }
+
+    #Floor-plan:hover {
+      cursor: pointer;
+    }
+
+    #Contact:hover {
+      cursor: pointer;
+    }
+
+
+
+    /* Floor Content */
+    #floor-content {
+      padding: 20px;
+      /* Add some padding inside the content area */
+      border: 1px solid #ddd;
+      /* Add a light border */
+      border-radius: 5px;
+      /* Add some rounded corners for a softer look */
+      margin-top: 20px;
+      /* Add some space after previous content */
+    }
+
+    /* Floor Details */
+    .floor-details {
+      margin-bottom: 20px;
+      /* Add spacing between floor details sections */
+    }
+
+    /* Select Box */
+    select {
+      width: 309px;
+      margin-bottom: 1rem;
+      font-size: 16px;
+      /* Increase select box font size for better readability */
+      padding: 5px;
+      /* Add some padding inside the select box */
+      border: 1px solid transparent;
+      /* Add a light border */
+      border-radius: 30%;
+      /* Add rounded corners to the select box */
+    }
+
+    /* Floor Heading and Description */
+    .floor-details h2,
+    .floor-details p {
+      margin: 5px 0;
+      /* Add some spacing between headings and paragraphs */
+    }
+
+    .floor-details h2 {
+      font-size: 18px;
+      /* Increase heading font size slightly */
+    }
+
+    .floor-details p {
+      color: #666;
+      /* Use a slightly lighter color for paragraphs */
+    }
+
+    /* Unordered List */
+    .floor-details ul {
+      list-style-type: disc;
+      /* Set list style to disc (bullets) */
+      padding-left: 20px;
+      /* Indent list items */
+    }
+
+    .floor-details ul li {
+      margin-bottom: 5px;
+      /* Add some spacing between list items */
+    }
+
+
+    .floor-details {
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 10px;
+      /* Add spacing between floors */
+    }
+
+    .floor-details h2 {
+      margin-top: 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .floor-details p {
+      margin-top: 5px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .floor-details ul {
+      list-style: none;
+      /* Remove default bullet points */
+      padding-left: 0;
+      /* Remove default indentation */
+      margin-top: 10px;
+      /* Add space after the description */
+    }
+
+    .floor-details li {
+      margin-bottom: 5px;
+    }
+
+    .floor-details li a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      /* Set a clean, readable font */
+      margin: 0;
+      /* Remove default margin from body */
+    }
+
+    /* Floor Content */
+    #floor-content {
+      padding: 20px;
+      /* Add some padding inside the content area */
+      border: 1px solid #ddd;
+      /* Add a light border */
+      border-radius: 5px;
+      /* Add some rounded corners for a softer look */
+      margin-top: 20px;
+      /* Add some space after previous content */
+    }
+
+    /* Floor Details */
+    .floor-details {
+      margin-bottom: 20px;
+      /* Add spacing between floor details sections */
+    }
+
+    /* Select Box */
+    select {
+      font-size: 16px;
+      /* Increase select box font size for better readability */
+      padding: 5px;
+      /* Add some padding inside the select box */
+      border: 1px solid #ddd;
+      /* Add a light border */
+      border-radius: 3px;
+      /* Add rounded corners to the select box */
+    }
+
+    /* Floor Heading and Description */
+    .floor-details h2,
+    .floor-details p {
+      margin: 5px 0;
+      /* Add some spacing between headings and paragraphs */
+    }
+
+    .floor-details h2 {
+      font-size: 18px;
+      /* Increase heading font size slightly */
+    }
+
+    .floor-details p {
+      color: #666;
+      /* Use a slightly lighter color for paragraphs */
+    }
+
+    /* Unordered List */
+    .floor-details ul {
+      list-style-type: disc;
+      /* Set list style to disc (bullets) */
+      padding-left: 20px;
+      /* Indent list items */
+    }
+
+    .floor-details ul li {
+      margin-bottom: 5px;
+      /* Add some spacing between list items */
+    }
+
+
+    /* /contact content/  */
+    #contact-content {
+      background-color: transparent;
+      width: 346px;
+      height: 150px;
+      padding-top: 20px;
+      border: 1px solid white;
+      margin-top: 10px;
+
+    }
+
+
+    #contact-content h2 {
+      width: 250px;
+      height: 20px;
+      /* border: 1px solid white;
+      border-radius: 1rem; */
+
+      font-size: 1.5rem;
+      padding-bottom: 10px;
+      padding-left: 10px;
+
+    }
+
+    #contact-content p {
+      padding-top: 10px;
+    }
+
+    #contact-content b {
+      padding-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="map"></div>
+
+    <div class="nav-bar">
+      <div class="navbar-logo icon-scale">
+        <div class="logo"></div>
+      </div>
+
+      <div class="web-name">
+        CTAE MAPS
+      </div>
+
+      <div class="nav-search border">
+
+        <input placeholder="   Search Location" class="search-input">
+        <button class="search-icon icon-scale" id="search-btn">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+
+      </div>
+
+      <div class="boxx">
+        <button class="menu button-icon icon-scale">
+          <i class="fa-solid fa-bars"></i>
+          <p class="icon-font">Menu</p>
+        </button>
+        <button class="saved button-icon icon-scale">
+          <i class="fa-solid fa-bookmark"></i>
+          <p class="icon-font">Saved</p>
+
+        </button>
+        <button class="history button-icon icon-scale">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <p class="icon-font">History</p>
+
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="box" id="box_1">
+
+    <div id="image">
+
+    </div>
+
+    <div class="tabs">
+      <div id="Overview">Overview</div>
+      <div id="Floor-plan">Floor plan</div>
+      <div id="Contact">Contact</div>
+    </div>
+
+    <div id="overview-content">
+      <div id="building">
+        <i id="icon" class="fa-regular fa-building"></i>
+        <p id="buiding-name">Building name</p>
+        <p id="floors-font">No. of floors</p>
+        <p>Details</p>
+      </div>
+    </div>
+
+    <div id="floor-content">
+      <p>Floor:</p>
+      <select id="flr" name="floor">
+        <!-- <option value=""> Select Floor </option> -->
+        <option value="1" selected>Ground Floor</option>
+        <option value="2">First Floor</option>
+        <option value="3">Second Floor</option>
+      </select>
+      <div id="f-detail">
+        <!-- <div class="floor-details" data-floor="1">
+        <h2>Ground Floor</h2>
+        <p>This is a description of the Ground Floor.</p>
+
+        <ul>
+          <li>List of offices or facilities on this floor.</li>
+          <li>Links to detailed pages for specific items (e.g., restaurants, shops).</li>
+          <li>Images or icons representing key features.</li>
+        </ul>
+
+      </div> -->
+
+        <!-- <div class="floor-details" data-floor="2">
+        <h2>First Floor</h2>
+        <p>This is a description of the First Floor.</p>
+      </div> -->
+      </div>
+    </div>
+
+
+    <div id="contact-content">
+      <h2>Contact Information</h2>
+      <p>
+        <b>Phone:</b> (555) 555-5555<br>
+        <b>Email:</b> info@example.com<br>
+        <b>Website:</b> <a href="https://ctae.ac.in/index.php">www.ctae.com</a>
+      </p>
+      <h3>Social Media</h3>
+      <ul>
+        <li><a href="https://www.facebook.com/ctae.ac.in/"><i class="fab fa-facebook"></i> Facebook</a></li>
+        <!-- <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+        <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li> -->
+      </ul>
+    </div>
+  </div>
+
+
+
+
+  <script>
+
+    // --------------------------New------------------------------------------------
+
+    // Set Panning restriction
+    var southwest = L.latLng(24.588360, 73.721109); //  coordinates
+    var northeast = L.latLng(24.611012, 73.750146); //  coordinates
+    var bounds = L.latLngBounds(southwest, northeast);
+
+    // Creating Base Map
+    var map = L.map('map', { maxBounds: bounds }).setView([24.595444, 73.736565], 13);
+    // var map = L.map('map').setView([24.595444, 73.736565], 13);
+
+    // satellite layer
+    googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+      maxZoom: 20,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+    googleSat.addTo(map);
+
+    // Street Layer
+    var osm = L.tileLayer('https://api.maptiler.com/maps/bright-v2/{z}/{x}/{y}.png?key=uoTd2n2jFBOqRWn2JLn7',
+      {
+        attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+      }).addTo(map);
+
+
+    // Layer control 
+    var baseLayers = {
+      "Satellite Map": googleSat,
+      "Street Map": osm
+    }
+    L.control.layers(baseLayers).addTo(map);
+
+    // Setting Default zoom Level
+    map.setZoom(16);
+    map.setView([24.596185, 73.735621]);
+
+    // Create a custom control for locating the user's current position
+    var locateControl = L.control({
+      position: 'topleft'
+    });
+
+    // Set the content and behavior of the custom control
+    locateControl.onAdd = function (map) {
+      var div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+      div.innerHTML = '<button id="locate-button" title="Go to Current Location">📍</button>';
+
+      // Add a click event listener to the button
+      L.DomEvent.on(div, 'click', function () {
+        map.locate({ setView: true, maxZoom: 16 });
+      });
+
+      return div;
+    };
+
+    // Draw Event on the location position
+    map.locate({ setView: true, maxZoom: 16 });
+
+    // Listen for the locationfound event
+    map.on('locationfound', function (event) {
+      var radius = event.accuracy; // Get the accuracy (radius) of the location in meters
+      map.setZoom(16);
+      // Create a circle centered at the user's location
+      L.circle(event.latlng, {
+        color: 'blue', // Circle color
+        fillColor: 'blue', // Fill color
+        fillOpacity: 0.3, // Opacity of the fill
+        radius: radius // Set the radius of the circle
+        // radius: "4" //Radius override
+
+      }).addTo(map);
+    });
+
+    locateControl.addTo(map);
+
+
+
+    // // Add Custom Marker Icon
+    // var leafletIcon = L.icon(
+    //     {
+    //         iconUrl: 'assets\\education.png',
+    //         iconSize: [40, 40],
+    //         iconAnchor: [20, 20],
+    //     }
+    // )
+    // Add Marker
+    // var marker = L.marker([24.596551, 73.734467], { icon: leafletIcon }).addTo(map);
+    // marker.bindPopup("<b>BasicScience Department</b>").openPopup();
+
+
+    // ---------------------------Add GeoJSON--------------------------
+
+    var jsonArray = [
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73445644, 24.59676688], [73.73449838, 24.59676954], [73.73459202, 24.59674293], [73.73464859, 24.59668795], [73.73467395, 24.59664538], [73.7346915, 24.59658596], [73.7346837, 24.59651945], [73.73465541, 24.59646801], [73.73461152, 24.59641835], [73.7345335, 24.59638376], [73.73446034, 24.59637401], [73.73437451, 24.59639352], [73.73431599, 24.59643431], [73.73427503, 24.59649196], [73.7342565, 24.59656468], [73.73426137, 24.59662232], [73.73428478, 24.59666844], [73.73431404, 24.59671101], [73.73436866, 24.59674648], [73.73442328, 24.59676865], [73.73445644, 24.59676688]]] }, "id": "14b81a05-d233-4893-a8a9-7a7b98af3791", "properties": { "name": "Basic Science Department", "imageUrl": "assets\\BSPopup.png", "id": 11 } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73352624, 24.59630445], [73.73362378, 24.59633372], [73.73359647, 24.59642683], [73.73364133, 24.59644457], [73.73363256, 24.59650754], [73.73376813, 24.59654124], [73.73377983, 24.59652527], [73.7338208, 24.59653769], [73.73383153, 24.59650222], [73.73400026, 24.59655543], [73.73406073, 24.59634436], [73.73398466, 24.59632041], [73.73396808, 24.59635677], [73.73387054, 24.59633106], [73.73382275, 24.59631775], [73.73386957, 24.59617763], [73.73371644, 24.59613595], [73.73368523, 24.59623439], [73.73365401, 24.59622907], [73.73356233, 24.59620246], [73.73354185, 24.59625745], [73.73352624, 24.59630445]]] }, "id": "60d0450a-bd37-4876-ac62-0b500b178ca8", "properties": { "name": "Administrative Block", "imageUrl": "assets\\admin.png", "id": 9 } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73362992, 24.59590855], [73.73369517, 24.59592528], [73.73367342, 24.59598765], [73.73376376, 24.59600894], [73.7338725, 24.59563474], [73.73400801, 24.59567733], [73.73407827, 24.59543699], [73.7339344, 24.59540656], [73.73398961, 24.59521185], [73.73412846, 24.59524228], [73.73414017, 24.59521033], [73.73423553, 24.59523315], [73.73426397, 24.59513884], [73.73410671, 24.59510081], [73.73407995, 24.59518295], [73.73400466, 24.59516926], [73.73404649, 24.59503996], [73.73398961, 24.59502171], [73.73398124, 24.59504605], [73.73394276, 24.59503996], [73.7339344, 24.59506734], [73.73387083, 24.59505061], [73.73375372, 24.59546285], [73.73362992, 24.59590855]]] }, "id": "acd04609-b5c7-4d14-a845-1682ec329363", "properties": { "name": "CTAE Main Building", "imageUrl": "assets\\MainBuilding.png" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73428265, 24.59525835], [73.7343031, 24.59518398], [73.73436602, 24.59520257], [73.73438489, 24.59514107], [73.73502983, 24.59531986], [73.73500938, 24.59536849], [73.73539163, 24.59546575], [73.7353523, 24.595553], [73.73428265, 24.59525835]]] }, "id": "c0e2dedb-d70b-4ca3-93ea-abe989c8ab16", "properties": { "name": "Computer Science department", "imageUrl": "assets\\CSE.png", "id": 4 } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73380601, 24.59589959], [73.73381479, 24.59586766], [73.7341152, 24.59593329], [73.73415421, 24.595771], [73.73421078, 24.59578519], [73.73416689, 24.59595014], [73.73415031, 24.59594837], [73.73414739, 24.59596699], [73.73426638, 24.59599448], [73.73427223, 24.59597231], [73.73431222, 24.59597675], [73.73435221, 24.59581268], [73.73488573, 24.59593152], [73.73483988, 24.59610002], [73.73472284, 24.59607164], [73.73471309, 24.59610711], [73.73483696, 24.59613283], [73.73479599, 24.59629158], [73.73463213, 24.59625256], [73.7346614, 24.5961621], [73.73463116, 24.596155], [73.7346058, 24.59623837], [73.73401084, 24.59611421], [73.7340557, 24.59595635], [73.73380601, 24.59589959]]] }, "id": "98e5f455-70d2-451b-86d7-b92f3644470a", "properties": { "name": "Food and Processing Department", "imageUrl": "assets\\fpd.png" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73495364, 24.59588584], [73.73503362, 24.59555416], [73.73524234, 24.59560028], [73.73515651, 24.5959293], [73.73495364, 24.59588584]]] }, "id": "819ca6e4-3709-491f-83c6-0c2f2db5516b", "properties": { "name": "PG Block", "id": 7, "imageUrl": "assets\\pg.png" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73530795, 24.59586843], [73.73533891, 24.5957727], [73.73542871, 24.59579663], [73.73547361, 24.5956277], [73.73538226, 24.59560939], [73.73540084, 24.59554604], [73.7355758, 24.59559391], [73.73548445, 24.59590925], [73.73530795, 24.59586843]]] }, "id": "f8358896-5867-442a-bab9-260de51b51e5", "properties": { "name": "Farm Machinery Department", "imageUrl": "assets\\fmd.png" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73668771, 24.59663289], [73.73671868, 24.59656532], [73.73619227, 24.59641328], [73.73625265, 24.59626969], [73.73631303, 24.59628517], [73.7363471, 24.5961824], [73.73629136, 24.59616692], [73.7363022, 24.59612609], [73.73682241, 24.59626265], [73.73684409, 24.5961993], [73.73631768, 24.59604444], [73.73628362, 24.59611342], [73.73611176, 24.59606837], [73.73602505, 24.59633444], [73.73599254, 24.5964358], [73.73613189, 24.59648085], [73.73614427, 24.59651746], [73.73612105, 24.59658503], [73.73645547, 24.59668217], [73.73648025, 24.59661882], [73.73649728, 24.59657658], [73.73668771, 24.59663289]]] }, "id": "e6973e39-1446-480e-9cc9-0da41253f480", "properties": { "name": "AN Khosla Hostel", "imageUrl": "assets\\khosla.jpg" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73309663, 24.59714461], [73.73313231, 24.59702604], [73.73343073, 24.5970945], [73.73428143, 24.59731475], [73.73413128, 24.59779678], [73.73407306, 24.59779418], [73.73405075, 24.59787721], [73.73399323, 24.59786632], [73.73412607, 24.5973889], [73.73386501, 24.59731808], [73.73376558, 24.59769678], [73.73364231, 24.59766283], [73.73373963, 24.59730338], [73.73350147, 24.59724705], [73.73339894, 24.59763727], [73.73326672, 24.59761385], [73.73338083, 24.59720616], [73.73309663, 24.59714461]]] }, "id": "fd5287e0-ad53-4b4e-9846-735d90da1f99", "properties": { "name": "Civil Engineering Department ", "id": 2, "imageUrl": "assets\\Civil.jpg" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73535918, 24.59565273], [73.73539411, 24.59550279], [73.73557234, 24.59553891], [73.73553514, 24.59569649], [73.73535918, 24.59565273]]] }, "id": "f9fbf5ab-988c-4a7e-bcbc-8b0e441ed793", "properties": { "name": "Digital Technology cell" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73566344, 24.59785557], [73.73571806, 24.5976179], [73.73580194, 24.59763564], [73.73582633, 24.59752123], [73.73595995, 24.59754873], [73.7359736, 24.59748487], [73.73624475, 24.59753986], [73.73623402, 24.59757711], [73.73633838, 24.59760016], [73.73624768, 24.59800988], [73.73585754, 24.59793627], [73.73587022, 24.59789282], [73.73566344, 24.59785557]]] }, "id": "d1109469-4ff7-4dbb-84ea-a7a6d16bd8aa", "properties": { "name": "Electrical Department", "id": 3, "imageUrl": "assets\\elec.png" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73421589, 24.59629325], [73.7342586, 24.59617173], [73.73444493, 24.59620757], [73.73441685, 24.59633467], [73.73434071, 24.5963206], [73.73433412, 24.59635699], [73.73428252, 24.59634609], [73.7342875, 24.59631939], [73.73421589, 24.59629325]]] }, "id": "3956bb1b-418d-4eae-8846-9f849e7dadcd", "properties": { "name": "College Library", "id": 10, "imageUrl": "assets\\liib.png" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73436229, 24.59859423], [73.73447849, 24.59821389], [73.7345827, 24.5982372], [73.7346156, 24.59811881], [73.73478655, 24.59816005], [73.73481093, 24.59808289], [73.73453891, 24.59802161], [73.73456252, 24.59793126], [73.73475038, 24.59797724], [73.73476832, 24.59793481], [73.73484798, 24.59795611], [73.73485415, 24.59793658], [73.73505945, 24.59798569], [73.73507572, 24.59794555], [73.73517564, 24.5979709], [73.73515473, 24.59800682], [73.73532669, 24.59805542], [73.73537085, 24.59808078], [73.7355219, 24.5981167], [73.7354638, 24.59828996], [73.73536388, 24.59826461], [73.73538247, 24.59822869], [73.73532437, 24.59820967], [73.73529648, 24.59830898], [73.73543127, 24.59833011], [73.73541581, 24.59839119], [73.73550796, 24.5984104], [73.73565901, 24.59844209], [73.73564506, 24.59849703], [73.73558232, 24.59849069], [73.7355707, 24.5985414], [73.73562647, 24.59855197], [73.73553119, 24.59890272], [73.73439018, 24.59863015], [73.73439423, 24.59860553], [73.73436229, 24.59859423]]] }, "id": "bbc30e90-4b12-441d-bd42-8ab0833443ee", "properties": { "name": "Mechanical Engineering", "id": 1, "imageUrl": "assets\\mech.png" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73349999, 24.59849517], [73.73352242, 24.59841624], [73.73339758, 24.59838432], [73.73344244, 24.59825395], [73.73354486, 24.59828056], [73.73358094, 24.59815285], [73.73367848, 24.59817502], [73.73371164, 24.59808368], [73.73404131, 24.59815906], [73.73396133, 24.59844905], [73.73386282, 24.59842777], [73.73383648, 24.59850759], [73.73374578, 24.59848541], [73.7337292, 24.59854749], [73.73349999, 24.59849517]]] }, "id": "6ca82d13-fe65-47eb-b03f-9f5fb6523188", "properties": { "name": "Mining Department", "id": 5, "imageUrl": "assets\\mining.png" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73663767, 24.59677629], [73.73684374, 24.59620067], [73.73689201, 24.59621248], [73.736905, 24.59618041], [73.73715192, 24.59625299], [73.73716863, 24.59622092], [73.73728558, 24.59625637], [73.73724103, 24.59638466], [73.73729487, 24.59640661], [73.73728187, 24.59644712], [73.73735984, 24.59647075], [73.73721132, 24.59686575], [73.73725031, 24.59687082], [73.73721875, 24.59694509], [73.73663767, 24.59677629]]] }, "id": "3de3579e-0ef9-4984-837e-82e09dc19a93", "properties": { "name": "MV Hostel", "imageUrl": "assets\\mv.png" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73606368, 24.59706267], [73.73609563, 24.59688389], [73.7361841, 24.59689842], [73.73624309, 24.59686266], [73.73631436, 24.59687607], [73.73632051, 24.596904], [73.73638687, 24.59691071], [73.73641759, 24.59674646], [73.73657611, 24.59677439], [73.73658348, 24.59679785], [73.73663633, 24.59680344], [73.73657734, 24.59709395], [73.73649992, 24.59708166], [73.73648763, 24.59711295], [73.73652941, 24.59717105], [73.73659577, 24.59718558], [73.73667319, 24.5968783], [73.73673709, 24.59689283], [73.73661666, 24.59732748], [73.73640776, 24.59729731], [73.73642496, 24.59719675], [73.73623449, 24.59716882], [73.73624432, 24.59711518], [73.73607842, 24.59708725], [73.73606368, 24.59706267]]] }, "id": "97bfb4c8-2152-4cc1-b44e-f0ba5e34c5b8", "properties": { "name": "Neta Ji Subhas Chandra Hostel", "imageUrl": "assets\\nscb.png" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73784622, 24.5967373], [73.73797937, 24.59638254], [73.73864822, 24.59659511], [73.73854913, 24.59685696], [73.73841753, 24.59681754], [73.73847481, 24.5966641], [73.73852436, 24.59668099], [73.73854139, 24.59663594], [73.73831534, 24.59656837], [73.73828438, 24.5966472], [73.73833237, 24.59666832], [73.7383045, 24.59674012], [73.73825341, 24.59672181], [73.73823328, 24.5967556], [73.73826889, 24.59676968], [73.73821625, 24.59688934], [73.73811407, 24.59685696], [73.73814749, 24.59674261], [73.73816115, 24.59673463], [73.7381729, 24.5967007], [73.73814503, 24.59669507], [73.7381729, 24.59661623], [73.73819922, 24.59662609], [73.73823019, 24.5965388], [73.73802117, 24.59647264], [73.73791279, 24.59676123], [73.73784622, 24.5967373]]] }, "id": "7934f543-9266-4ba1-b3ba-cfe19d5ba05a", "properties": { "name": "Rana Punja Hostel" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73863166, 24.59676961], [73.7386552, 24.59664407], [73.73884437, 24.59668514], [73.73883905, 24.59666082], [73.73885917, 24.59664084], [73.73869432, 24.59660041], [73.73874037, 24.59644449], [73.73886955, 24.59647993], [73.73884641, 24.59653888], [73.73896871, 24.59655597], [73.7390397, 24.59641566], [73.73917572, 24.59646998], [73.73914675, 24.59655913], [73.73917265, 24.59658211], [73.7390801, 24.59673133], [73.73897762, 24.59687363], [73.73863166, 24.59676961]]] }, "id": "724e1385-7dd2-455e-a974-72e6c6d82858", "properties": { "name": "4th Year Hostel" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.7392242, 24.5978442], [73.73931881, 24.59786282], [73.73933441, 24.59779542], [73.73935392, 24.59779631], [73.73936075, 24.5977697], [73.73946706, 24.59779099], [73.73953826, 24.59740255], [73.7395012, 24.597399], [73.73952656, 24.59730056], [73.7392915, 24.5972642], [73.73926614, 24.59740078], [73.73924858, 24.597399], [73.73924371, 24.59741763], [73.73918226, 24.59740787], [73.73912276, 24.59773334], [73.73916958, 24.5977431], [73.7391647, 24.59776527], [73.73923688, 24.59778035], [73.7392242, 24.5978442]]] }, "id": "e00f6417-1686-413f-8b06-7ea9a9eb7f51", "properties": { "name": "University Sports Complex", "imageUrl": "assets\\sportcom.png" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73429168, 24.5970906], [73.73433069, 24.59699659], [73.73461549, 24.59708439], [73.73456965, 24.59718726], [73.73429168, 24.5970906]]] }, "id": "62a8e27e-d916-40e9-91ac-3c1ca8a1f47f", "properties": { "name": "CTAE Canteen", "id": 8, "imageUrl": "assets\\canteen.jpeg" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73797905, 24.59510306], [73.73804303, 24.59489385], [73.73820421, 24.5949386], [73.73813039, 24.59514222], [73.73797905, 24.59510306]]] }, "id": "eda0cb60-5c35-460a-9f50-d6cdd9b865cd", "properties": { "name": "CTAE Hospital" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73864065, 24.59031065], [73.73864759, 24.59052662], [73.738691, 24.59054234], [73.73868626, 24.59068103], [73.73882848, 24.5906648], [73.73883496, 24.59045656], [73.73886355, 24.59043656], [73.73885639, 24.59026874], [73.73896823, 24.59027313], [73.73897047, 24.59057713], [73.73895245, 24.59065042], [73.738967, 24.59075912], [73.7387983, 24.59075636], [73.73879765, 24.59080704], [73.73870062, 24.59081256], [73.73869802, 24.59070816], [73.73852405, 24.59070045], [73.73851716, 24.59057047], [73.73848072, 24.59056637], [73.73848445, 24.590516], [73.73849698, 24.59030665], [73.73864065, 24.59031065]]] }, "id": "6d287905-535b-42f4-bae1-9929a8f8ab0b", "properties": { "name": "Electronics engineering Department", "imageUrl": "assets\\ece.jpg" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73301165, 24.59594399], [73.7330413, 24.59583615], [73.73312851, 24.59556652], [73.73316863, 24.59544282], [73.73320701, 24.59536034], [73.73324538, 24.59531435], [73.73329945, 24.59529373], [73.73336573, 24.5952858], [73.73342155, 24.59530483], [73.73347388, 24.59534924], [73.73350702, 24.59539682], [73.733514, 24.59545868], [73.73350702, 24.59553005], [73.73347911, 24.59564265], [73.73343899, 24.59577588], [73.73340236, 24.59590752], [73.73336399, 24.59605977], [73.73333783, 24.59615652], [73.73328027, 24.59623582], [73.73324538, 24.5962834], [73.73321398, 24.59629926], [73.73318433, 24.59629609], [73.73314247, 24.59624375], [73.73303258, 24.59605819], [73.73300816, 24.59600109], [73.73301165, 24.59594399]]] }, "id": "4c100d78-7856-44be-8ba4-d93570732281", "properties": { "name": "CTAE Garden", "imageUrl": "assets\\Ctae park.jpg" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73889807, 24.60076028], [73.73889615, 24.60072785], [73.73893179, 24.60070738], [73.73893086, 24.60063046], [73.73885291, 24.60061911], [73.7388362, 24.6005437], [73.7389085, 24.60053276], [73.73889036, 24.60039202], [73.73884302, 24.60038552], [73.73884807, 24.60033913], [73.73910172, 24.60032186], [73.73910383, 24.60047242], [73.73922159, 24.60045688], [73.73923543, 24.6005288], [73.7392838, 24.60051765], [73.73928262, 24.60045455], [73.73933743, 24.60044604], [73.73929082, 24.60030301], [73.73941976, 24.60026232], [73.7394238, 24.60043476], [73.73951668, 24.60043214], [73.739497, 24.60026219], [73.73961155, 24.60024546], [73.73965196, 24.60041442], [73.73967651, 24.6004941], [73.73974373, 24.60049218], [73.73978456, 24.60059061], [73.73967316, 24.60059752], [73.73972384, 24.60074919], [73.73957685, 24.60079287], [73.73955005, 24.60065145], [73.73953697, 24.6006073], [73.73946822, 24.60061187], [73.73945514, 24.60066304], [73.73938717, 24.60066378], [73.7393998, 24.60069343], [73.73925274, 24.60071528], [73.73925741, 24.6006762], [73.73906606, 24.60069678], [73.73906163, 24.60076443], [73.73889807, 24.60076028]]] }, "id": "88a95368-4dc5-4b34-991e-e5aadde57365", "properties": { "name": "MPUAT Administrative Building", "imageUrl": "assets\\MPUAT.png" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73934179, 24.59032154], [73.73934476, 24.59023418], [73.73960511, 24.59022302], [73.73961044, 24.59008057], [73.739512, 24.59006212], [73.73928426, 24.59006164], [73.73928308, 24.58999369], [73.7394266, 24.58999126], [73.73942838, 24.58985658], [73.73951556, 24.58985537], [73.73952742, 24.58999078], [73.73966263, 24.58997379], [73.73967449, 24.59006091], [73.73969762, 24.59022204], [73.73969229, 24.5903196], [73.73934179, 24.59032154]]] }, "id": "147d404a-42fa-4156-b083-c8d3c68c37f6", "properties": { "name": "Homi J Bhabha Phd. Hostel" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73966115, 24.59865715], [73.73966364, 24.59856435], [73.73990759, 24.59854851], [73.73988767, 24.59801661], [73.73961883, 24.59800077], [73.73962381, 24.59792382], [73.73966862, 24.59792608], [73.73966862, 24.59782423], [73.73977566, 24.59782875], [73.73977566, 24.5978695], [73.73986776, 24.5978695], [73.73986527, 24.59780159], [73.74017892, 24.59780386], [73.74019136, 24.59818184], [73.74031334, 24.59817958], [73.74032081, 24.59833349], [73.74018141, 24.59833349], [73.7401839, 24.59864809], [73.73966115, 24.59865715]]] }, "id": "4175c903-b197-4691-b697-2893fecb3657", "properties": { "name": "Scientist Hostel" } }] },
+      { "type": "FeatureCollection", "features": [{ "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.7380429, 24.59888574], [73.73807996, 24.59875981], [73.73825162, 24.59880149], [73.73823407, 24.59885115], [73.73827991, 24.59886445], [73.73825357, 24.59894338], [73.7380429, 24.59888574]]] }, "id": "72d70ab0-3a29-4049-8190-271a8d46f236", "properties": { "name": "" } }, { "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [[[73.73723314, 24.599355], [73.73709829, 24.59929369], [73.73701814, 24.59919349], [73.73696214, 24.59911516], [73.73692911, 24.59901071], [73.73691906, 24.59891801], [73.73697018, 24.59870514], [73.73716234, 24.59804303], [73.73726011, 24.59794494], [73.73734102, 24.59789283], [73.73751633, 24.59785604], [73.73764444, 24.59786217], [73.73777929, 24.59790509], [73.73788717, 24.59798172], [73.73798157, 24.59808288], [73.73801528, 24.59823002], [73.73800854, 24.59836796], [73.73796471, 24.59862545], [73.73789391, 24.59887374], [73.73781975, 24.59909751], [73.73769164, 24.59926917], [73.73753993, 24.59935806], [73.73738485, 24.59937952], [73.73723314, 24.599355]]] }, "id": "9a03bf4c-cba1-4933-b602-5712de8de296", "properties": { "name": "CTAE Ground", "imageUrl": "assets\\ground.jpg" } }] }
+
+    ];
+    var geoJSON_BS = 0;
+
+    var geoJSONStyle = {
+      "color": "#c6a5f0",
+      "weight": 2, // Keep other properties, remove "opacity"
+      "fillOpacity": 0.1
+    };
+
+
+    var geoJSONLayer = L.geoJSON(jsonArray, {
+      style: geoJSONStyle,
+      onEachFeature: function (feature, layer) {
+
+        // Hover on Event
+        layer.on('mouseover', function (event) {
+
+          layer.setStyle({ color: "#52e36f" })
+          layer.setStyle({ fillOpacity: 0.5 }); // Full opacity on hover
+          var imageUrl = feature.properties.imageUrl;//Get Image URL
+          var description = feature.properties.name;//Get Name
+
+          var popupContent = `
+        <img src="${imageUrl}" alt="Image" width="200">
+        <p>${description}</p>
+    `;
+          layer.bindPopup(popupContent).openPopup();
+        });
+
+        // Attach mouseout event listener
+        layer.on('mouseout', function (event) {
+          layer.setStyle({ color: "#3ed3ed" })
+          layer.setStyle({ fillOpacity: 0 }); // Transparent when not hovering
+          layer.closePopup();
+        });
+
+        // Click event
+        layer.on('click', function (event) {
+          clickID = feature.properties.id;
+          console.log("clicked on element with id: ", clickID);
+          let stringID = clickID.toString();
+          console.log(clickID);
+          console.log(stringID);
+
+          // Calling fucntion
+          detail_pane(stringID)
+        });
+      }
+    }).addTo(map);
+
+    // Adding Image Overlays
+    // function showImage(imageUrl, ImgCoords, ImgSize) {
+    //     // var imageUrl = 'assets\\BasicScience.png';
+    //     // var ImgCoords = [24.5965717, 73.73447361111111];
+    //     // var ImgSize = 0.00029;
+    //     var latLngBounds = L.latLngBounds([[ImgCoords[0] + ImgSize, ImgCoords[1] - ImgSize], [ImgCoords[0] - ImgSize, ImgCoords[1] + ImgSize]]);
+    //     var imageOverlay = L.imageOverlay(imageUrl, latLngBounds, {
+    //         opacity: 1,
+    //         // errorOverlayUrl: errorOverlayUrl,
+    //         interactive: true
+    //     }).addTo(map);
+
+
+
+
+    // Loop Running Each frame
+    function loop() {
+
+      // Zoom Restriction
+      if (map.getZoom() < 16) {
+        map.setZoom(16);
+      }
+    }
+    setInterval(loop, 16.6);
+
+  </script>
+
+  <!-- <script src="script.js">
+  </script> -->
+
+  <script>
+    const Department_array = [{
+      id: '0',
+      image: "location",
+      name: 'Soil and Water Engineering',
+      floor: [
+        ["Hod office", "Conference Hall", "IDP"],
+        ["Post Office", "Warden Office", "405"]
+      ],
+      detail: 'The Agriculture Department plays a pivotal role in nurturing the backbone of human civilization',
+      faculty: 10,
+      contact: {
+        Dean: "+912942470837",
+      }
+    },
+    {
+      id: '1',
+      image: "location",
+      name: 'Mechanical Engineering',
+      floor: [
+        ["Hod office", "Conference Hall", "IDP", "CARPENTRY SHOP", "Smith Shop", "Welding shop", "Machine shop", "Foundary Shop", "Pattern Shop", "Drawing Lab", "Fluid Lab"],
+
+      ],
+      detail: 'To provide mechanical engineers of highest caliber who would engage in research, design and development to help building the nation towards self reliance in her technological need. To become a centre of excellence in education, research and technological service to the nation for its need in design and manufacturing independence.',
+      faculty: 10,
+      contact: {
+        Dean: "+912942470837",
+      }
+    },
+    {
+      id: '2',
+      image: "location",
+      name: 'Civil Engineering ',
+      floor: [
+        ["Mechanics lab", "Civil Lab", "Exam hall"],
+        ["Hod office", "Conference Hall", "IDP", "Control Centre"]
+      ],
+      detail: 'The department of Civil Engineering was established in year 1965 offering diploma in Civil Engineering. Undergraduate program B.Tech. in the Civil Engineering was started in 2007. The undergraduate programme of the department is approved by the AICTE. Currently the department has an annual intake of 40 students through centralized admission process of Rajasthan Government.',
+      faculty: 13,
+      contact: {
+        Dean: "+912942470837",
+      }
+    },
+    {
+      id: '3',
+      image: "location",
+      name: 'Electrical Engineering',
+      floor: [
+        ["IDP", "basic Electrical lab ", "Machine Motors Lab"],
+        ["HOD Office", " Conference Hall ", "Head Office", "EMI lab", "Power System "]
+      ],
+      detail: 'The department of electrical engineering was established in the year 1957 offering diploma in electrical stream. Under Graduate program was started in 1996 with discontinuation of diploma program.The Department of Electrical Engineering is one of the well established department in the College of Technology and Engineering (C.T.A.E.), and has a distinguished faculty, all holding M.E/ M.Tech./ M.B.A. degrees from renowned institutes in India.the Department offers instructions at undergraduate and postgraduate levels with the aim of providing a sound background in the areas of Electrical Engineering.',
+      faculty: 9,
+      contact: {
+        Dean: "+912942470837",
+      }
+    },
+    {
+      id: '4',
+      image: "location",
+      name: 'Computer Science Engineering',
+      floor: [
+        ["Hod office", , "IDP"],
+        ["Oops Lab", "Networking lab", "AVP Hall", "AI Classroom"]
+      ],
+      detail: 'The Department aims at imparting quality education and strive to quench the thirst for knowledge.The Department offers B.Tech. (CSE) and M.Tech. (CSE) and Ph.D (CSE) programs.  The Department lays emphasis on theoretical and practical aspects of subjects taught viz. Computer Technologies, Distributed Computing, Information Security, High Speed Networks, Wireless and Mobile Networks, Programming Languages, networking and database management, Software engineering and several other domains of computer engineering. Moreover updation of syllabus is carried out at regular span of time to keep in pace with the recent technologies.The classes are conducted by procuring latest technologies viz. smart classes and multimedia.The department has developed a high end seminar hall with the state of art computation and multimedia facility.The curriculum inculcates industrial summer training which enable students to get acquainted with work culture and in turn help them groom themselves. CSE students have accomplished training projects in esteemed organizations such as TCS, HCL, RAMCO, CTS, Nature Soft, NAL, ISRO, NLC, IGCAR etc.',
+
+      faculty: 18,
+      contact: {
+        Dean: "+912942470837",
+      }
+    },
+    {
+      id: '5',
+      image: "location",
+      name: 'Minning Engineering',
+      floor: [
+        ["Hod office", "Conference Hall", "IDP"],
+        ["Rock Mechanic Lab", "Mines Surveying Lab", "Geology Lab", "Technology Lab"]
+      ],
+      detail: 'The Department of Mining Engineering was established in 1957 in Udaipur to impart diploma in mining and mine surveying and in 1996, it was raised to degree level to cater the demand and need of the mining sector with an annual intake capacity of 20 students. The department has its own building with all infrastructure facilities and modern well equipped laboratories i.e Mine computing laboratory, Rock mechanics & Dimensional Stone Laboratory, Mining and Mineral Processing, Environmental & Geology Laboratory, Survey Lab. etc. and a departmental library having good number of books. Department is situated in the heart of mining activities, so that students get practical exposures with theory part. We have a unique way to imparting field based knowledge, in which guest faculties from renowned fields like DGMS, DMG, IBM, HZL, RSMML are invited',
+
+
+      faculty: 10,
+      contact: {
+        Dean: "+912942470837",
+      }
+    },
+    {
+      id: '6',
+      image: "location",
+      name: 'PG BLock',
+      floor: [
+        ["Department Section ", "Professor Room", "IDP"],
+        ["Networking lab ", "HOD Office"]
+      ],
+      detail: 'The pg block',
+      faculty: 5,
+      contact: {
+        Dean: "+912942470837",
+      }
+    },
+    {
+      id: '7',
+      image: "location",
+      name: 'PG BLock',
+      floor: [
+        ["Department Section ", "Professor Room", "IDP"],
+        ["Networking lab ", "HOD Office"]
+      ],
+      detail: 'The pg block',
+      faculty: 5,
+      contact: {
+        Dean: "+912942470837",
+      }
+    },
+    {
+      id: '8',
+      image: "location",
+      name: 'Canteen ',
+      floor: [],
+      detail: "Food prepared",
+      faculty: 1,
+      contact: {
+        Dean: "+912942470837",
+      }
+    },
+
+
+    ];
+
+    const search_btn = document.getElementById("search-btn"); // mod
+    const inputField = document.querySelector('.search-input'); //mod
+    const image = document.getElementById("image");
+    const building = document.querySelectorAll("#building p");
+    const faculty = document.getElementById("faculty");
+    const Overview = document.getElementById("Overview");
+    const Floor_plan = document.getElementById("Floor-plan");
+    const Contact = document.getElementById("Contact");
+    const overview_tab = document.getElementById("overview-content");
+    const floor_tab = document.getElementById("floor-content");
+    const contact_tab = document.getElementById("contact-content");
+    const select_floor = document.getElementById("flr");
+    const f_detail = document.getElementById("f-detail");
+    const main_box = document.getElementById("box_1");
+    const MaPs = document.getElementById("map");
+
+    main_box.style.display = "none"; 1195
+    MaPs.style.left = '0';
+
+    let department_floor = ["ground floor", "first floor", "second floor", "third floor", "fourth floor"] //mod
+
+    // pane hide/unhide
+    main_box.style.display = "none";
+
+    // event listener for serch button
+    search_btn.addEventListener("click", () => { searchBox() }); //mod
+
+
+    // // search function
+    // function searchBox() {
+    //   let user_input = inputField.value;     //mod
+    //   console.log(user_input);
+    // }
+    function searchBox() {
+      let user_input = inputField.value;     //mod
+      for (let i = 0; i < Department_array.length; i++) {
+        // console.log(Department_array[i].name.toLowerCase());
+        if (user_input.toLowerCase().trim() == `${Department_array[i].name.toLowerCase().trim()}`) {
+          console.log("success");
+        }
+      }
+      // console.log(user_input);
+    }
+
+
+    // Main funtction
+    function detail_pane(id) {
+      MaPs.style.left = '350px';
+      overview_tab.style.display = "none";
+      floor_tab.style.display = "none";
+      contact_tab.style.display = "none";
+      let is_validate = true;
+
+      let dept_length = Department_array.length;
+
+      for (let key in Department_array) {
+        console.log("length:", Department_array.length);
+        // console.log(key);
+        if (id == Department_array[key].id) {
+          is_validate = true;
+          break;
+        }
+      }
+
+      function Button_Click() {
+        overview_tab.style.display = "block";
+        building[0].innerText = Department_array[id].name;
+        building[1].innerText = `No.of floors: ${Department_array[id].floor.length}`;
+        building[2].innerText = Department_array[id].detail;
+
+      }
+
+      if (is_validate) {
+        main_box.style.display = "block";
+        let department = Department_array[id];
+
+        Button_Click();
+        // 
+        select_floor.innerHTML = "";
+        function floor_count(n) {
+          for (let i = 0; i < n; i++) {
+            const new_options = document.createElement("option");
+            new_options.text = department_floor[i];
+            new_options.value = i;
+            select_floor.appendChild(new_options);
+          }
+        }
+
+        //add image
+        image.style.backgroundImage = `url(assets/${id}.jpg)`;
+
+        //event listeners for overview
+        Overview.addEventListener("click", () => {
+
+          overview_tab.style.display = "block";
+          floor_tab.style.display = "none";
+          contact_tab.style.display = "none";
+
+
+
+          //others
+          building[0].innerText = department.name;
+          building[1].innerText = `No. of floors: ${department.floor.length}`;
+          building[2].innerText = department.detail;
+        })
+
+        let thanos = 0;
+
+        const addFloorData = () => {
+          function departmentFloorData() {
+            let str = '';
+            for (let value of department.floor[thanos]) {
+              str += `<li>${value}</li>`
+            }
+            return str;
+          }
+
+          f_detail.innerHTML = `<div class="floor-details" data-floor="${id}">
+            <h2>${department_floor[parseInt(thanos)]}</h2>
+            <p>This is a description of the ${department_floor[parseInt(thanos)]}.</p>
+            
+            <ul>
+                ${departmentFloorData()}
+            </ul>
+    
+          </div>`
+        }
+        addFloorData();
+        select_floor.addEventListener('change', (event) => {
+          thanos = event.target.value;
+          addFloorData();
+        })
+        floor_count(department.floor.length);
+        // event listeners for floor_plan
+        Floor_plan.addEventListener("click", () => {
+          overview_tab.style.display = "none";
+          floor_tab.style.display = "block";
+          contact_tab.style.display = "none";
+
+          // console.log(parseInt(thanos));
+        })
+
+
+        // overview tab
+        Contact.addEventListener("click", () => {
+          overview_tab.style.display = "none";
+          floor_tab.style.display = "none";
+          contact_tab.style.display = "block";
+        })
+      }
+    }
+
+
+    // detail_pane('1');
+  </script>
+</body>
+
+</html>
